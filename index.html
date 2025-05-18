@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DailySchedule - Smart Daily Planner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8B85FF;
+            --primary-dark: #554EE6;
+            --secondary: #FF6584;
+            --accent: #FFC107;
+            --dark-bg: #0F172A;
+            --card-bg: #1E293B;
+            --surface: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --border-radius: 12px;
+            --border-radius-sm: 6px;
+            --text-muted: #94A3B8;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.16);
+            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.24);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --gradient-accent: linear-gradient(135deg, var(--secondary), var(--accent));
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(108, 99, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 101, 132, 0.15) 0%, transparent 50%);
+        }
+
+        .navbar {
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-md);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-brand {
+            font-family: "Dancing Script", cursive;
+            font-weight: 700;
+            font-size: 2.2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .navbar-brand span {
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::before {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::before {
+            width: 80%;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        .card-header {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            font-size: 1.35rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .on-time {
+            border-left: 4px solid var(--success);
+        }
+
+        .delayed {
+            border-left: 4px solid var(--danger);
+        }
+
+        .early {
+            border-left: 4px solid var(--warning);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .form-control,
+        .form-select {
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: var(--border-radius-sm);
+            padding: 0.85rem 1.25rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: var(--surface);
+            color: var(--text-primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25);
+        }
+
+        .form-select option {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .btn {
+            font-weight: 600;
+            padding: 0.85rem 2rem;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            background: var(--gradient-primary);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+        }
+
+        .badge {
+            font-weight: 600;
+            padding: 0.4rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-day {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .time-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .time-indicator i {
+            margin-right: 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            margin: 1.75rem 0;
+        }
+
+        footer {
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        .empty-state h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+        }
+
+        .empty-state p {
+            max-width: 400px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        .feature-card {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .feature-card h5 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-menu {
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+        }
+
+        .dropdown-item {
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-btn {
+            background-color: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .delete-btn {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            transition: var(--transition);
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .form-check-label {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating-card {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse:hover {
+            animation: pulse 2s infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Animated gradient border */
+        .gradient-border {
+            position: relative;
+            border-radius: var(--border-radius);
+        }
+
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius);
+            z-index: -1;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                Daily<span>Schedule</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home"><i class="fas fa-home me-2"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#activities"><i class="fas fa-calendar-check me-2"></i> My Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features"><i class="fas fa-star me-2"></i> Features</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="section" id="home">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h1 class="display-4 fw-bold mb-4">Plan Your Perfect <span class="gradient-text">Day</span></h1>
+                        <p class="lead mb-4" style="color: var(--text-secondary);">DailySchedule helps you organize your tasks, track your time, and achieve more with less stress. The intelligent way to manage your daily routine.</p>
+                        <a href="#activities" class="btn btn-primary btn-lg pulse me-3">
+                            <i class="fas fa-calendar-plus me-2"></i>Start Planning
+                        </a>
+                        <a href="#features" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>How It Works
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card gradient-border floating-card">
+                            <div class="card-body glass-card">
+                                <form id="activityForm">
+                                    <div class="mb-4">
+                                        <label for="activityName" class="form-label">Task Name</label>
+                                        <input type="text" class="form-control" id="activityName" placeholder="What do you need to accomplish?" required>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label for="plannedTime" class="form-label">Planned Time (min)</label>
+                                            <input type="number" class="form-control" id="plannedTime" min="1" placeholder="Estimated duration" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="actualTime" class="form-label">Actual Time (min)</label>
+                                            <input type="number" class="form-control" id="actualTime" min="1" placeholder="Actual duration" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="activityDay" class="form-label">Day of Week</label>
+                                        <select class="form-select" id="activityDay">
+                                            <option>Monday</option>
+                                            <option>Tuesday</option>
+                                            <option>Wednesday</option>
+                                            <option>Thursday</option>
+                                            <option>Friday</option>
+                                            <option>Saturday</option>
+                                            <option>Sunday</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Priority Level</label>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="priority" id="priorityLow" value="low" checked>
+                                                <label class="form-check-label" for="priorityLow">
+                                                    <i class="fas fa-arrow-down me-1"></i> Low
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="priority" id="priorityMedium" value="medium">
+                                                <label class="form-check-label" for="priorityMedium">
+                                                    <i class="fas fa-equals me-1"></i> Medium
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="priority" id="priorityHigh" value="high">
+                                                <label class="form-check-label" for="priorityHigh">
+                                                    <i class="fas fa-arrow-up me-1"></i> High
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="actionPlan" class="form-label">Action Steps</label>
+                                        <textarea class="form-control" id="actionPlan" rows="2" placeholder="How will you accomplish this?"></textarea>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="reason" class="form-label">Time Difference Notes</label>
+                                        <textarea class="form-control" id="reason" rows="2" placeholder="Why was there a difference in time?"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100 pulse">
+                                        <i class="fas fa-plus-circle me-2"></i>Add to Schedule
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity List Section -->
+        <section class="section" id="activities">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h2 class="section-title">My <span class="gradient-text">Schedule</span></h2>
+                    <div class="dropdown">
+                        <button class="btn filter-btn dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-2"></i>Filter Tasks
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
+                            <li><a class="dropdown-item" href="#" data-filter="all"><i class="fas fa-list me-2"></i>All Tasks</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" data-filter="on-time"><i class="fas fa-check-circle me-2 text-success"></i>On Time</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="early"><i class="fas fa-clock me-2 text-warning"></i>Early</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="delayed"><i class="fas fa-exclamation-circle me-2 text-danger"></i>Delayed</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="activityList">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h4>Your schedule is empty</h4>
+                        <p>Add your first task to start optimizing your daily routine</p>
+                        <a href="#home" class="btn btn-primary mt-3 pulse">
+                            <i class="fas fa-plus-circle me-2"></i>Add Task
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Why Choose <span class="gradient-text">DailySchedule</span></h2>
+                    <p class="lead" style="color: var(--text-secondary); max-width: 700px; margin: 0 auto;">Designed to help you master your time and achieve your goals with intelligent planning</p>
+                </div>
+                
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h5>Time Analytics</h5>
+                            <p>Visualize how you spend your time with beautiful charts and identify areas for improvement.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <h5>Smart Reminders</h5>
+                            <p>Never miss important tasks with intelligent notifications that adapt to your schedule.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5>Pattern Recognition</h5>
+                            <p>Discover your productivity patterns and learn when you work most effectively.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h5>Cross-Platform Sync</h5>
+                            <p>Access your schedule from any device with seamless cloud synchronization.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-balance-scale-right"></i>
+                            </div>
+                            <h5>Work-Life Balance</h5>
+                            <p>Maintain a healthy balance between professional and personal activities with smart scheduling.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <h5>Habit Building</h5>
+                            <p>Create and track positive habits that contribute to your long-term success.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start text-center mb-3 mb-md-0">
+                    <a class="navbar-brand" href="#">
+                        Daily<span>Schedule</span>
+                    </a>
+                    <p class="mt-2 mb-0 small" style="color: var(--text-muted);">Designed with ❤️ by Akash Meghwar</p>
+                </div>
+                <div class="col-md-6 text-md-end text-center">
+                    <div class="social-icons mb-3">
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-github"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 DailySchedule. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load tasks from localStorage if available
+            let tasks = JSON.parse(localStorage.getItem('dailyTasks')) || [];
+            
+            // Form submission
+            document.getElementById("activityForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById("activityName").value.trim();
+                const planned = parseInt(document.getElementById("plannedTime").value);
+                const actual = parseInt(document.getElementById("actualTime").value);
+                const day = document.getElementById("activityDay").value;
+                const plan = document.getElementById("actionPlan").value.trim();
+                const reason = document.getElementById("reason").value.trim();
+                const priority = document.querySelector('input[name="priority"]:checked').value;
+
+                // Validate inputs
+                if (!name || isNaN(planned) || isNaN(actual)) {
+                    alert("Please fill in all required fields");
+                    return;
+                }
+
+                const difference = actual - planned;
+                let status, statusClass, badgeClass, icon;
+                
+                if (difference === 0) {
+                    status = 'On Time';
+                    statusClass = 'on-time';
+                    badgeClass = 'badge-success';
+                    icon = 'fa-check-circle';
+                } else if (difference < 0) {
+                    status = `${Math.abs(difference)} min early`;
+                    statusClass = 'early';
+                    badgeClass = 'badge-warning';
+                    icon = 'fa-clock';
+                } else {
+                    status = `${difference} min delayed`;
+                    statusClass = 'delayed';
+                    badgeClass = 'badge-danger';
+                    icon = 'fa-exclamation-circle';
+                }
+
+                // Priority badge
+                let priorityBadge;
+                switch(priority) {
+                    case 'low':
+                        priorityBadge = '<span class="badge bg-secondary me-2"><i class="fas fa-arrow-down me-1"></i> Low</span>';
+                        break;
+                    case 'medium':
+                        priorityBadge = '<span class="badge bg-primary me-2"><i class="fas fa-equals me-1"></i> Medium</span>';
+                        break;
+                    case 'high':
+                        priorityBadge = '<span class="badge bg-danger me-2"><i class="fas fa-arrow-up me-1"></i> High</span>';
+                        break;
+                }
+
+                // Create task object
+                const task = {
+                    id: Date.now(),
+                    name,
+                    planned,
+                    actual,
+                    day,
+                    plan,
+                    reason,
+                    priority,
+                    status: statusClass,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Add to tasks array
+                tasks.push(task);
+                saveTasks();
+
+                // Remove empty state if it exists
+                const emptyState = document.querySelector('.empty-state');
+                if (emptyState) {
+                    emptyState.remove();
+                }
+
+                const activityHTML = `
+                    <div class="card ${statusClass} activity-card mb-4 floating-card" data-status="${statusClass}" data-id="${task.id}">
+                        <div class="card-header">
+                            <div>
+                                ${priorityBadge}
+                                <span class="badge badge-day"><i class="far fa-calendar-alt me-1"></i>${day}</span>
+                            </div>
+                            <span class="badge ${badgeClass}">
+                                <i class="fas ${icon} me-1"></i>${status}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-tasks me-2"></i>${name}
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="card-text"><strong><i class="far fa-clock me-2"></i>Planned Time:</strong> ${planned} minutes</p>
+                                    <p class="card-text"><strong><i class="fas fa-clock me-2"></i>Actual Time:</strong> ${actual} minutes</p>
+                                    <p class="card-text"><strong><i class="fas fa-balance-scale me-2"></i>Difference:</strong> ${Math.abs(difference)} minutes 
+                                        (${difference > 0 ? 'over' : 'under'})</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="card-text"><strong><i class="fas fa-clipboard-list me-2"></i>Action Steps:</strong> ${plan || 'Not specified'}</p>
+                                    <p class="card-text"><strong><i class="fas fa-comment me-2"></i>Time Notes:</strong> ${reason || 'Not specified'}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="divider"></div>
+                            
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm delete-btn">
+                                    <i class="fas fa-trash-alt me-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("activityList").insertAdjacentHTML("beforeend", activityHTML);
+                e.target.reset();
+                
+                // Scroll to the new activity
+                document.querySelector('.activity-card:last-child').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            // Filter activities
+            document.querySelectorAll('[data-filter]').forEach(filter => {
+                filter.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const filterValue = this.getAttribute('data-filter');
+                    const activities = document.querySelectorAll('.activity-card');
+                    
+                    activities.forEach(activity => {
+                        if (filterValue === 'all') {
+                            activity.style.display = 'block';
+                        } else {
+                            if (activity.getAttribute('data-status') === filterValue) {
+                                activity.style.display = 'block';
+                            } else {
+                                activity.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    // Show empty state if no activities match the filter
+                    const visibleActivities = document.querySelectorAll('.activity-card[style="display: block"]');
+                    const emptyState = document.querySelector('.empty-state');
+                    
+                    if (visibleActivities.length === 0 && !emptyState) {
+                        const emptyHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-filter"></i>
+                                <h4>No tasks match this filter</h4>
+                                <p>Try changing your filter criteria or add new tasks</p>
+                                <a href="#home" class="btn btn-primary mt-3 pulse">
+                                    <i class="fas fa-plus-circle me-2"></i>Add Task
+                                </a>
+                            </div>
+                        `;
+                        document.getElementById('activityList').insertAdjacentHTML('beforeend', emptyHTML);
+                    } else if (visibleActivities.length > 0 && emptyState) {
+                        emptyState.remove();
+                    }
+                });
+            });
+
+            // Delete activity (event delegation)
+            document.getElementById('activityList').addEventListener('click', function(e) {
+                if (e.target.closest('.delete-btn')) {
+                    const card = e.target.closest('.activity-card');
+                    const taskId = parseInt(card.getAttribute('data-id'));
+                    
+                    // Remove from tasks array
+                    tasks = tasks.filter(task => task.id !== taskId);
+                    saveTasks();
+                    
+                    // Animation for removal
+                    card.style.transform = 'scale(0.95)';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        
+                        // Show empty state if no activities left
+                        if (document.querySelectorAll('.activity-card').length === 0) {
+                            const emptyHTML = `
+                                <div class="empty-state">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <h4>Your schedule is empty</h4>
+                                    <p>Add your first task to start optimizing your daily routine</p>
+                                    <a href="#home" class="btn btn-primary mt-3 pulse">
+                                        <i class="fas fa-plus-circle me-2"></i>Add Task
+                                    </a>
+                                </div>
+                            `;
+                            document.getElementById('activityList').insertAdjacentHTML('beforeend', emptyHTML);
+                        }
+                    }, 300);
+                }
+            });
+
+            // Save tasks to localStorage
+            function saveTasks() {
+                localStorage.setItem('dailyTasks', JSON.stringify(tasks));
+            }
+
+            // Load tasks on page load
+            function loadTasks() {
+                if (tasks.length > 0) {
+                    document.querySelector('.empty-state').remove();
+                    
+                    tasks.forEach(task => {
+                        const difference = task.actual - task.planned;
+                        let status, statusClass, badgeClass, icon;
+                        
+                        if (difference === 0) {
+                            status = 'On Time';
+                            statusClass = 'on-time';
+                            badgeClass = 'badge-success';
+                            icon = 'fa-check-circle';
+                        } else if (difference < 0) {
+                            status = `${Math.abs(difference)} min early`;
+                            statusClass = 'early';
+                            badgeClass = 'badge-warning';
+                            icon = 'fa-clock';
+                        } else {
+                            status = `${difference} min delayed`;
+                            statusClass = 'delayed';
+                            badgeClass = 'badge-danger';
+                            icon = 'fa-exclamation-circle';
+                        }
+
+                        // Priority badge
+                        let priorityBadge;
+                        switch(task.priority) {
+                            case 'low':
+                                priorityBadge = '<span class="badge bg-secondary me-2"><i class="fas fa-arrow-down me-1"></i> Low</span>';
+                                break;
+                            case 'medium':
+                                priorityBadge = '<span class="badge bg-primary me-2"><i class="fas fa-equals me-1"></i> Medium</span>';
+                                break;
+                            case 'high':
+                                priorityBadge = '<span class="badge bg-danger me-2"><i class="fas fa-arrow-up me-1"></i> High</span>';
+                                break;
+                        }
+
+                        const activityHTML = `
+                            <div class="card ${statusClass} activity-card mb-4 floating-card" data-status="${statusClass}" data-id="${task.id}">
+                                <div class="card-header">
+                                    <div>
+                                        ${priorityBadge}
+                                        <span class="badge badge-day"><i class="far fa-calendar-alt me-1"></i>${task.day}</span>
+                                    </div>
+                                    <span class="badge ${badgeClass}">
+                                        <i class="fas ${icon} me-1"></i>${status}
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-tasks me-2"></i>${task.name}
+                                    </h5>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="card-text"><strong><i class="far fa-clock me-2"></i>Planned Time:</strong> ${task.planned} minutes</p>
+                                            <p class="card-text"><strong><i class="fas fa-clock me-2"></i>Actual Time:</strong> ${task.actual} minutes</p>
+                                            <p class="card-text"><strong><i class="fas fa-balance-scale me-2"></i>Difference:</strong> ${Math.abs(difference)} minutes 
+                                                (${difference > 0 ? 'over' : 'under'})</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="card-text"><strong><i class="fas fa-clipboard-list me-2"></i>Action Steps:</strong> ${task.plan || 'Not specified'}</p>
+                                            <p class="card-text"><strong><i class="fas fa-comment me-2"></i>Time Notes:</strong> ${task.reason || 'Not specified'}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="divider"></div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-sm delete-btn">
+                                            <i class="fas fa-trash-alt me-1"></i>Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        document.getElementById("activityList").insertAdjacentHTML("beforeend", activityHTML);
+                    });
+                }
+            }
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add animation when elements come into view
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature-card, .section-title, .card');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            // Set initial state for animation
+            document.querySelectorAll('.feature-card, .section-title, .card').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+
+            // Load tasks when page loads
+            loadTasks();
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on load
+        });
+    </script>
+</body>
+</html>
