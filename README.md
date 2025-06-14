@@ -1,4 +1,4 @@
-z# DailySchedule - Smart Daily Planner
+
 
 ## Project Description
 
