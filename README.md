@@ -1,6 +1,7 @@
 # DailySchedule - Smart Daily Planner
 
-![DailySchedule Logo](https://via.placeholder.com/150x50?text=DailySchedule) <!-- Replace with actual logo -->
+![<img width="463" alt="image" src="https://github.com/user-attachments/assets/daf8986b-75c8-4a05-aeac-70ac5578d0bb" />
+](https://via.placeholder.com/150x50?text=DailySchedule) <!-- Replace with actual logo -->
 
 ## Project Description
 
